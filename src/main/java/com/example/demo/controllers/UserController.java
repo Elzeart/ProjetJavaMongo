@@ -1,27 +1,39 @@
 package com.example.demo.controllers;
 
+import com.example.demo.Mapper.UserMapper;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entities.User;
 import com.example.demo.services.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @PostMapping("/users")
-    public ResponseEntity<User> registerUser(@RequestBody User user) throws URISyntaxException {
-        User userResult = this.userService.save(user);
+    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
+        User userResult = this.userService.save(userMapper.userToUserDTO(userDTO));
         return ResponseEntity.ok(userResult);
     }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") String userId, @RequestBody UserDTO user) throws URISyntaxException {
+        User userResult = this.userService.update(userId, user);
+        return ResponseEntity.ok(userResult);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") String userId) {
+        this.userService.delete(userId);
+        return new ResponseEntity(HttpStatusCode.valueOf(204));
+    }
+
 }
