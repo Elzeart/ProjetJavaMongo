@@ -8,8 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Document(collection = "users")
 @Getter
@@ -23,6 +25,7 @@ public class User {
     private String email;
     private String password;
     private LocalDateTime dateCreation;
+    private Set<Role> roles = new HashSet<>();
     @DocumentReference
     List<Message> messages;
     public void addMessage(Message message){

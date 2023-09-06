@@ -4,3 +4,7 @@ spring:
       host: localhost
       port: 27017
       database: social-network
+authentication:
+  app:
+    jwtSecret: kxgsgsjdkdkdk
+    jwtExpirationMs: 86400000
